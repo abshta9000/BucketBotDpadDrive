@@ -5,7 +5,7 @@
 package frc.robot.subsystems;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.PortConstants;
-import frc.robot.Constants.MotorConstants;;
+import frc.robot.Constants.MotorConstants;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
@@ -14,9 +14,11 @@ public class Drive extends SubsystemBase {
   private WPI_TalonSRX  frontleft;
   private WPI_TalonSRX  backright;
   private WPI_TalonSRX  backleft;
+  private double reduction;
 
   /** Creates a new Drive. */
   public Drive() {
+    reduction = 1;
 
     frontright = new WPI_TalonSRX(PortConstants.frontrightMotorID);
     frontleft = new WPI_TalonSRX(PortConstants.frontleftMotorID);
@@ -42,8 +44,20 @@ public class Drive extends SubsystemBase {
   }
 
   public void speedSetter(double rightspeed,double leftspeed){
-    frontleft.set(leftspeed);
-    frontright.set(rightspeed);
+    frontleft.set(leftspeed * reduction);
+    frontright.set(rightspeed * reduction);
+  }
+
+  public void incrementSpeed(){
+    double reductionVal = reduction + 0.1;
+    if(reductionVal > 1) reduction = 1;
+    else reduction = reductionVal;
+  }
+
+  public void decrementSpeed(){
+    double reductionVal = reduction - 0.1;
+    if(reductionVal < 0.1) reduction = 0.1;
+    else reduction = reductionVal;
   }
 
   @Override

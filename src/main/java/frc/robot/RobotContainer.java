@@ -23,15 +23,13 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final Drive drivebaseSubsystem = new Drive();
-  private final XboxController controller;
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
-  private final CommandXboxController m_driverController =
-      new CommandXboxController(PortConstants.kDriverControllerPort);
+  private CommandXboxController m_driverController;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    controller = new XboxController(0);
+    m_driverController = new CommandXboxController(PortConstants.kDriverControllerPort);
     // Configure the trigger bindings
      
 
@@ -52,10 +50,28 @@ public class RobotContainer {
 
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
-    m_driverController.povLeft().onTrue(new InstantCommand(() -> drivebaseSubsystem.speedSetter(1, -1))).onFalse(new InstantCommand(() -> drivebaseSubsystem.speedSetter(0,0)));
-    m_driverController.povRight().onTrue(new InstantCommand(() -> drivebaseSubsystem.speedSetter(-1, 1))).onFalse(new InstantCommand(() -> drivebaseSubsystem.speedSetter(0,0)));
-    m_driverController.povUp().onTrue(new InstantCommand(() -> drivebaseSubsystem.speedSetter(1, 1))).onFalse(new InstantCommand(() -> drivebaseSubsystem.speedSetter(0,0)));
-    m_driverController.povDown().onTrue(new InstantCommand(() -> drivebaseSubsystem.speedSetter(-1, -1))).onFalse(new InstantCommand(() -> drivebaseSubsystem.speedSetter(0,0)));
+    m_driverController.povLeft()
+      .onTrue(new InstantCommand(() -> drivebaseSubsystem.speedSetter(-1, 1)))
+      .onFalse(new InstantCommand(() -> drivebaseSubsystem.speedSetter(0,0)));
+
+    m_driverController.povRight()
+      .onTrue(new InstantCommand(() -> drivebaseSubsystem.speedSetter(1, -1)))
+      .onFalse(new InstantCommand(() -> drivebaseSubsystem.speedSetter(0,0)));
+
+    m_driverController.povUp()
+      .onTrue(new InstantCommand(() -> drivebaseSubsystem.speedSetter(1, 1)))
+      .onFalse(new InstantCommand(() -> drivebaseSubsystem.speedSetter(0,0)));
+
+    m_driverController.povDown()
+      .onTrue(new InstantCommand(() -> drivebaseSubsystem.speedSetter(-1, -1)))
+      .onFalse(new InstantCommand(() -> drivebaseSubsystem.speedSetter(0,0)));
+    
+    m_driverController.rightTrigger()
+      .onTrue(new InstantCommand(() -> drivebaseSubsystem.incrementSpeed()));
+
+    m_driverController.leftTrigger()
+      .onTrue(new InstantCommand(() -> drivebaseSubsystem.decrementSpeed()));
+  
   }
 
   /**
